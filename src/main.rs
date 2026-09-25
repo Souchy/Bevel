@@ -1,4 +1,6 @@
 use bevy::prelude::*;
+
+use crate::plugins::ui::draggable_panel::DraggablePanelPlugin;
 pub mod plugins;
 
 #[derive(Resource, Default)]
@@ -25,6 +27,7 @@ fn main() {
     } else {
         app.init_resource::<UiEnabled>()
             .add_plugins(DefaultPlugins)
+            .add_plugins(DraggablePanelPlugin)
             .add_systems(Startup, setup_ui.in_set(Sets::Ui));
     }
 
