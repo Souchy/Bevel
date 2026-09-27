@@ -1,4 +1,10 @@
-use crate::{Sets, plugins::{gold::gold::GoldBank, ui::draggable_panel::DraggablePanel}};
+use crate::{
+    Sets,
+    plugins::{
+        gold::gold::GoldBank,
+        ui::{draggable_panel::DraggablePanel, styling::interaction_style::InteractionStyle},
+    },
+};
 use bevy::{color::palettes::css::GOLD, prelude::*, text::FontSize::Px};
 
 #[derive(Component, Default)]
@@ -17,6 +23,7 @@ impl Plugin for GoldUiPlugin {
 fn setup_ui(mut commands: Commands) {
     commands
         .spawn((
+            Interaction::None,
             DraggablePanel::default(),
             Node {
                 position_type: PositionType::Absolute,
@@ -33,7 +40,11 @@ fn setup_ui(mut commands: Commands) {
                 border_radius: BorderRadius::all(Val::Px(16.0)),
                 ..default()
             },
-            BackgroundColor(Color::srgba(0.2, 0.2, 0.2, 0.8)), // Dark grey, semi-transparent background
+            InteractionStyle::new(
+                BackgroundColor(Color::srgba(0.2, 0.2, 0.2, 0.8)), // Dark grey, semi-transparent background
+                BackgroundColor(Color::srgba(0.3, 0.3, 0.3, 0.8)),
+                BackgroundColor(Color::srgba(0.4, 0.4, 0.4, 0.8)),
+            ),
             BorderColor::all(GOLD),
             BoxShadow(vec![ShadowStyle {
                 // A transparent black/dark color for a soft look
@@ -59,6 +70,29 @@ fn setup_ui(mut commands: Commands) {
                 },
                 Node::default(),
             ));
+            panel
+                .spawn((
+                    Button,
+                    Node {
+                        width: px(150.0),
+                        height: px(50.0),
+                        justify_content: JustifyContent::Center,
+                        align_items: AlignItems::Center,
+                        ..default()
+                    },
+                    BackgroundColor(Color::srgb(0.2, 0.2, 0.8)),
+                    children![(
+                        Text::new("Click Me"),
+                        TextFont {
+                            font_size: FontSize::Px(20.0),
+                            ..default()
+                        },
+                        TextColor(Color::WHITE),
+                    )],
+                ))
+                .observe(|mut click: On<Pointer<Click>>| {
+                    info!("Button clicked!");
+                });
         });
 }
 

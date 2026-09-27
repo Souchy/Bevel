@@ -1,6 +1,6 @@
+use crate::plugins::ui::UiPlugins;
 use bevy::prelude::*;
 
-use crate::plugins::ui::draggable_panel::DraggablePanelPlugin;
 pub mod plugins;
 
 #[derive(Resource, Default)]
@@ -25,16 +25,8 @@ fn main() {
         //     )),
         // );
     } else {
-        app.init_resource::<UiEnabled>()
-            .add_plugins(DefaultPlugins)
-            .add_plugins(DraggablePanelPlugin)
-            .add_systems(Startup, setup_ui.in_set(Sets::Ui));
+        app.add_plugins(DefaultPlugins).add_plugins(UiPlugins);
     }
 
     app.add_plugins(plugins::FeaturesPlugins).run();
-}
-
-fn setup_ui(mut commands: Commands) {
-    // commands.spawn(Camera2dBundle::default());
-    commands.spawn(Camera2d);
 }

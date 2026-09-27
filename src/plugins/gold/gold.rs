@@ -49,5 +49,5 @@ fn generate_gold_system(
     // Multiply by delta_seconds for smooth frame-independent production
     gold_bank.amount += total_generation * time.delta_secs_f64();
 
-    println!("Total gold: {}", gold_bank.amount);
+    // println!("Total gold: {}", gold_bank.amount);
 }
