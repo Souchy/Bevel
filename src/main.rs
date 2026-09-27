@@ -25,7 +25,11 @@ fn main() {
         //     )),
         // );
     } else {
-        app.add_plugins(DefaultPlugins).add_plugins(UiPlugins);
+        app.add_plugins(DefaultPlugins)
+            .add_plugins(UiPlugins)
+            // .add_plugins(EguiPlugin::default())
+            // .add_plugins(WorldInspectorPlugin::new())
+            ;
     }
 
     app.add_plugins(plugins::FeaturesPlugins).run();
