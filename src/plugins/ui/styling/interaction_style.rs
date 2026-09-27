@@ -3,7 +3,7 @@ use bevy::{
     prelude::*,
 };
 
-#[derive(Component, Clone)]
+#[derive(Component, Clone, Default)]
 #[component(on_add = Self::on_add)]
 pub struct InteractionStyle<T: Component + Clone> {
     pub normal: T,

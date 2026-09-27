@@ -1,20 +1,19 @@
 use bevy::prelude::*;
 
-pub struct DraggablePanelPlugin;
+pub struct DraggablePlugin;
 
-impl Plugin for DraggablePanelPlugin {
+impl Plugin for DraggablePlugin {
     fn build(&self, app: &mut App) {
-        // App::add_observer expects a system where the first param implements IntoObserver (like On<E>)
         app.add_observer(on_drag_start).add_observer(on_drag);
     }
 }
 
-#[derive(Component, Default)]
-pub struct DraggablePanel {
+#[derive(Component, Clone, Default)]
+pub struct Draggable {
     ancestor_level: usize,
     start_pos: Vec2,
 }
-impl DraggablePanel {
+impl Draggable {
     pub fn new(ancestor_level: usize) -> Self {
         Self {
             ancestor_level,
@@ -25,7 +24,7 @@ impl DraggablePanel {
 
 fn on_drag_start(
     trigger: On<Pointer<DragStart>>,
-    mut handles: Query<&mut DraggablePanel>,
+    mut handles: Query<&mut Draggable>,
     parents: Query<&ChildOf>,
     panels: Query<&UiTransform>,
 ) {
@@ -55,7 +54,7 @@ fn on_drag_start(
 
 fn on_drag(
     trigger: On<Pointer<Drag>>,
-    handles: Query<&DraggablePanel>,
+    handles: Query<&Draggable>,
     parents: Query<&ChildOf>,
     mut panels: Query<&mut UiTransform>,
 ) {

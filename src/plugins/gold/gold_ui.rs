@@ -1,17 +1,11 @@
 use crate::{
     Sets,
-    plugins::{
-        gold::gold::GoldBank,
-        ui::{
-            collapsible::{CollapseToggle, CollapsibleContent},
-            draggable_panel::DraggablePanel,
-            styling::interaction_style::InteractionStyle,
-        },
-    },
+    plugins::{gold::gold::GoldBank, ui::components::collapsible_panel::collapsible_panel},
 };
-use bevy::{color::palettes::css::GOLD, prelude::*, text::FontSize::Px};
+use bevy::scene::prelude::*;
+use bevy::{color::palettes::css::GOLD, prelude::*};
 
-#[derive(Component, Default)]
+#[derive(Component, Clone, Default)]
 struct GoldText {
     displayed_amount: Option<f64>,
 }
@@ -25,108 +19,24 @@ impl Plugin for GoldUiPlugin {
 }
 
 fn setup_ui(mut commands: Commands) {
-    commands
-        .spawn((
-            // DraggablePanel::new(0),
-            Node {
-                position_type: PositionType::Absolute,
-                left: px(16),
-                top: px(16),
-                flex_direction: FlexDirection::Column,
-                // width: px(200),
-                width: Val::Auto,
-                // height: px(80),
-                height: Val::Auto,
-                padding: UiRect::all(px(16)), // Adds breathing room inside the panel
-                // 1. Set a non-zero border width on the Node
-                border: UiRect::all(Val::Px(1.0)),
-                // 2. Set the corner radius for rounding
-                border_radius: BorderRadius::all(Val::Px(16.0)),
-                ..default()
-            },
-            BackgroundColor(Color::srgba(0.2, 0.2, 0.2, 0.8)),
-            BorderColor::all(GOLD),
-            BoxShadow(vec![ShadowStyle {
-                // A transparent black/dark color for a soft look
-                color: Color::srgba(0.0, 0.0, 0.0, 0.6),
-                // Horizontal (X) and Vertical (Y) offsets
-                x_offset: Val::Px(0.0),
-                y_offset: Val::Px(8.0),
-                // Blurriness of the shadow edge
-                blur_radius: Val::Px(12.0),
-                // How much the shadow expands outwards past the node bounds
-                spread_radius: Val::Px(2.0),
-            }]),
-        ))
-        .with_children(|panel| {
-            let mut content_entity = Entity::PLACEHOLDER;
-
-            panel
-                .spawn((Node {
-                    width: Val::Percent(100.0),
-                    min_width: px(150.0),
-                    height: px(20),
-                    flex_direction: FlexDirection::Row,
-                    column_gap: px(8),
-                    // padding: UiRect::all(px(16)), // Adds breathing room inside the panel
-                    ..default()
-                },))
-                .with_children(|handle_bar| {
-                    handle_bar.spawn((
-                        Button,
-                        CollapseToggle::new("gold"),
-                        Node {
-                            width: px(16.0),
-                            height: px(16.0),
-                            justify_content: JustifyContent::Center,
-                            align_items: AlignItems::Center,
-                            padding: UiRect::all(px(8)),
-                            ..default()
-                        },
-                        InteractionStyle::new(
-                            BackgroundColor(Color::srgba(0.1, 0.1, 0.1, 0.8)), // Dark grey, semi-transparent background
-                            BackgroundColor(Color::srgba(0.05, 0.05, 0.05, 0.8)),
-                            BackgroundColor(Color::srgba(0.1, 0.1, 0.1, 0.8)),
-                        ),
-                        children![(
-                            Text::new("v"),
-                            TextFont {
-                                font_size: FontSize::Px(16.0),
-                                ..default()
-                            },
-                            TextColor(Color::WHITE),
-                        )],
-                    ));
-
-                    handle_bar.spawn((
-                        DraggablePanel::new(2),
-                        Node {
-                            width: Val::Percent(100.0),
-                            height: px(20),
-                            ..default()
-                        },
-                        InteractionStyle::new(
-                            BackgroundColor(Color::srgba(0.1, 0.1, 0.1, 0.8)), // Dark grey, semi-transparent background
-                            BackgroundColor(Color::srgba(0.05, 0.05, 0.05, 0.8)),
-                            BackgroundColor(Color::srgba(0.1, 0.1, 0.1, 0.8)),
-                        ),
-                    ));
-                });
-
-            let text = (
-                CollapsibleContent::new("gold"),
+    commands.spawn_scene(bsn! {
+        collapsible_panel("Gold".to_string(), bsn_list![
+            (
                 GoldText {
                     displayed_amount: None,
-                },
-                Text::new("Gold: 0"),
+                }
+                Text::new("Gold: 0")
                 TextFont {
-                    font_size: Px(32.0),
-                    ..default()
-                },
-                Node::default(),
-            );
-            content_entity = panel.spawn(text).id();
-        });
+                    font_size: FontSize::Px(32.0),
+                }
+                TextColor(GOLD)
+            )
+        ])
+        Node {
+            width: px(200.0),
+        }
+        BorderColor::all(GOLD)
+    });
 }
 
 fn update_gold_text(gold_bank: Res<GoldBank>, mut texts: Query<(&mut Text, &mut GoldText)>) {

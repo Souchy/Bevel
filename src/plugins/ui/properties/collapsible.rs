@@ -1,32 +1,32 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Component, Clone, Default)]
 pub struct CollapsibleContent {
-    id: &'static str,
+    id: String,
     base_display: Option<Display>,
 }
 impl CollapsibleContent {
-    pub fn new(id: &'static str) -> Self {
+    pub fn new(id: impl Into<String>) -> Self {
         Self {
-            id,
+            id: id.into(),
             base_display: None,
         }
     }
-    pub fn with_base(id: &'static str, base_display: Display) -> Self {
+    pub fn with_base(id: impl Into<String>, base_display: Display) -> Self {
         Self {
-            id,
+            id: id.into(),
             base_display: Some(base_display),
         }
     }
 }
 
-#[derive(Component)]
+#[derive(Component, Clone, Default)]
 pub struct CollapseToggle {
-    id: &'static str,
+    id: String,
 }
 impl CollapseToggle {
-    pub fn new(id: &'static str) -> Self {
-        Self { id }
+    pub fn new(id: impl Into<String>) -> Self {
+        Self { id: id.into() }
     }
 }
 
