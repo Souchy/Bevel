@@ -40,6 +40,11 @@ impl<T: Component + Clone> InteractionStyle<T> {
         let entity = context.entity;
         let default_val = world.get::<Self>(entity).unwrap().normal.clone();
 
+        // Make sure to have a Interaction component
+        if !world.entity(entity).contains::<Interaction>() {
+            world.commands().entity(entity).insert(Interaction::None);
+        }
+        // Make sure to have the default value component
         if !world.entity(entity).contains::<T>() {
             world.commands().entity(entity).insert(default_val);
         }

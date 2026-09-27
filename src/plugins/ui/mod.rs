@@ -1,11 +1,12 @@
 use crate::{
-    Sets, UiEnabled, plugins::ui::{draggable_panel::DraggablePanelPlugin, styling::interaction_style::interactive_style_system, tab::TabPlugin},
+    Sets, UiEnabled, plugins::ui::{collapsible::CollapsiblePlugin, draggable_panel::DraggablePanelPlugin, styling::interaction_style::interactive_style_system, tab::TabPlugin},
 };
 use bevy::{app::PluginGroupBuilder, prelude::*};
 
 pub mod draggable_panel;
 pub mod styling;
 pub mod tab;
+pub mod collapsible;
 
 pub struct UiPlugins;
 
@@ -15,6 +16,7 @@ impl PluginGroup for UiPlugins {
             .add(BaseUiPlugin)
             .add(DraggablePanelPlugin)
             .add(TabPlugin)
+            .add(CollapsiblePlugin)
     }
 }
 

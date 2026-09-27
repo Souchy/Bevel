@@ -11,8 +11,16 @@ impl Plugin for DraggablePanelPlugin {
 
 #[derive(Component, Default)]
 pub struct DraggablePanel {
-    pub ancestor_level: usize,
+    ancestor_level: usize,
     start_pos: Vec2,
+}
+impl DraggablePanel {
+    pub fn new(ancestor_level: usize) -> Self {
+        Self {
+            ancestor_level,
+            ..Default::default()
+        }
+    }
 }
 
 fn on_drag_start(

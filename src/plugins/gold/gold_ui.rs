@@ -2,7 +2,11 @@ use crate::{
     Sets,
     plugins::{
         gold::gold::GoldBank,
-        ui::{draggable_panel::DraggablePanel, styling::interaction_style::InteractionStyle},
+        ui::{
+            collapsible::{CollapseToggle, CollapsibleContent},
+            draggable_panel::DraggablePanel,
+            styling::interaction_style::InteractionStyle,
+        },
     },
 };
 use bevy::{color::palettes::css::GOLD, prelude::*, text::FontSize::Px};
@@ -23,12 +27,12 @@ impl Plugin for GoldUiPlugin {
 fn setup_ui(mut commands: Commands) {
     commands
         .spawn((
-            Interaction::None,
-            DraggablePanel::default(),
+            // DraggablePanel::new(0),
             Node {
                 position_type: PositionType::Absolute,
                 left: px(16),
                 top: px(16),
+                flex_direction: FlexDirection::Column,
                 // width: px(200),
                 width: Val::Auto,
                 // height: px(80),
@@ -40,11 +44,7 @@ fn setup_ui(mut commands: Commands) {
                 border_radius: BorderRadius::all(Val::Px(16.0)),
                 ..default()
             },
-            InteractionStyle::new(
-                BackgroundColor(Color::srgba(0.2, 0.2, 0.2, 0.8)), // Dark grey, semi-transparent background
-                BackgroundColor(Color::srgba(0.3, 0.3, 0.3, 0.8)),
-                BackgroundColor(Color::srgba(0.4, 0.4, 0.4, 0.8)),
-            ),
+            BackgroundColor(Color::srgba(0.2, 0.2, 0.2, 0.8)),
             BorderColor::all(GOLD),
             BoxShadow(vec![ShadowStyle {
                 // A transparent black/dark color for a soft look
@@ -59,7 +59,62 @@ fn setup_ui(mut commands: Commands) {
             }]),
         ))
         .with_children(|panel| {
-            panel.spawn((
+            let mut content_entity = Entity::PLACEHOLDER;
+
+            panel
+                .spawn((Node {
+                    width: Val::Percent(100.0),
+                    min_width: px(150.0),
+                    height: px(20),
+                    flex_direction: FlexDirection::Row,
+                    column_gap: px(8),
+                    // padding: UiRect::all(px(16)), // Adds breathing room inside the panel
+                    ..default()
+                },))
+                .with_children(|handle_bar| {
+                    handle_bar.spawn((
+                        Button,
+                        CollapseToggle::new("gold"),
+                        Node {
+                            width: px(16.0),
+                            height: px(16.0),
+                            justify_content: JustifyContent::Center,
+                            align_items: AlignItems::Center,
+                            padding: UiRect::all(px(8)),
+                            ..default()
+                        },
+                        InteractionStyle::new(
+                            BackgroundColor(Color::srgba(0.1, 0.1, 0.1, 0.8)), // Dark grey, semi-transparent background
+                            BackgroundColor(Color::srgba(0.05, 0.05, 0.05, 0.8)),
+                            BackgroundColor(Color::srgba(0.1, 0.1, 0.1, 0.8)),
+                        ),
+                        children![(
+                            Text::new("v"),
+                            TextFont {
+                                font_size: FontSize::Px(16.0),
+                                ..default()
+                            },
+                            TextColor(Color::WHITE),
+                        )],
+                    ));
+
+                    handle_bar.spawn((
+                        DraggablePanel::new(2),
+                        Node {
+                            width: Val::Percent(100.0),
+                            height: px(20),
+                            ..default()
+                        },
+                        InteractionStyle::new(
+                            BackgroundColor(Color::srgba(0.1, 0.1, 0.1, 0.8)), // Dark grey, semi-transparent background
+                            BackgroundColor(Color::srgba(0.05, 0.05, 0.05, 0.8)),
+                            BackgroundColor(Color::srgba(0.1, 0.1, 0.1, 0.8)),
+                        ),
+                    ));
+                });
+
+            let text = (
+                CollapsibleContent::new("gold"),
                 GoldText {
                     displayed_amount: None,
                 },
@@ -69,30 +124,8 @@ fn setup_ui(mut commands: Commands) {
                     ..default()
                 },
                 Node::default(),
-            ));
-            panel
-                .spawn((
-                    Button,
-                    Node {
-                        width: px(150.0),
-                        height: px(50.0),
-                        justify_content: JustifyContent::Center,
-                        align_items: AlignItems::Center,
-                        ..default()
-                    },
-                    BackgroundColor(Color::srgb(0.2, 0.2, 0.8)),
-                    children![(
-                        Text::new("Click Me"),
-                        TextFont {
-                            font_size: FontSize::Px(20.0),
-                            ..default()
-                        },
-                        TextColor(Color::WHITE),
-                    )],
-                ))
-                .observe(|mut click: On<Pointer<Click>>| {
-                    info!("Button clicked!");
-                });
+            );
+            content_entity = panel.spawn(text).id();
         });
 }
 
