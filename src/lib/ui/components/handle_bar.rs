@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::plugins::ui::{
+use crate::lib::ui::{
     properties::draggable::Draggable, styling::interaction_style::InteractionStyle,
 };
 

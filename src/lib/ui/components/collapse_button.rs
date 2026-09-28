@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::plugins::ui::{
+use crate::lib::ui::{
     properties::collapsible::CollapseToggle, styling::interaction_style::InteractionStyle,
 };
 

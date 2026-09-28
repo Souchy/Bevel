@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::plugins::ui::{
+use crate::lib::ui::{
     components::{collapse_button::bsn_collapse_button, handle_bar::bsn_handle_bar},
     properties::collapsible::CollapsibleContent,
 };

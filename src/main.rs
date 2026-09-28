@@ -1,6 +1,7 @@
-use crate::plugins::ui::UiPlugins;
+use crate::{lib::ui::UiPlugins, plugins::ui::main_ui::MainUiPlugin};
 use bevy::prelude::*;
 
+pub mod lib;
 pub mod plugins;
 
 #[derive(Resource, Default)]
@@ -27,6 +28,7 @@ fn main() {
     } else {
         app.add_plugins(DefaultPlugins)
             .add_plugins(UiPlugins)
+            .add_plugins(MainUiPlugin)
             // .add_plugins(EguiPlugin::default())
             // .add_plugins(WorldInspectorPlugin::new())
             ;

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::plugins::ui::{ButtonBundle, PanelBundle, styling::interaction_style::InteractionStyle};
+use crate::lib::ui::styling::interaction_style::InteractionStyle;
 
 #[derive(Component, Clone, Default)]
 pub struct TabGroup {

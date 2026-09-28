@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 
 use crate::Sets;
-use crate::plugins::ui::components::collapsible_panel::collapsible_panel;
-use crate::plugins::ui::tab::bsn_tabs;
+use crate::lib::ui::components::collapsible_panel::collapsible_panel;
+use crate::lib::ui::tab::bsn_tabs;
+use crate::plugins::ui::dungeon_ui::bsn_dungeon;
 
 pub struct MainUiPlugin;
 impl Plugin for MainUiPlugin {
@@ -16,8 +17,9 @@ fn setup_ui(mut commands: Commands) {
         collapsible_panel("Main".to_string(), bsn_list![
             (
                 bsn_tabs(
-                    vec!["Buildings".to_string(), "Jobs".to_string()],
+                    vec!["Dungeon".to_string(), "Buildings".to_string(), "Jobs".to_string()],
                     vec![
+                        Box::new(bsn_dungeon()),
                         Box::new(bsn! {
                             Text::new("some building: 0")
                         }),

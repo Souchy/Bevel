@@ -1,7 +1,5 @@
-use crate::{
-    Sets,
-    plugins::{gold::gold::GoldBank, ui::components::collapsible_panel::collapsible_panel},
-};
+use crate::lib::ui::components::collapsible_panel::collapsible_panel;
+use crate::{Sets, plugins::gold::gold::GoldBank};
 use bevy::scene::prelude::*;
 use bevy::{color::palettes::css::GOLD, prelude::*};
 
